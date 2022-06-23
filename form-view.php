@@ -1,30 +1,3 @@
-Skip to content
-Search or jump to…
-Pull requests
-Issues
-Marketplace
-Explore
- 
-@gychem 
-becodeorg
-/
-gnt-yu-4
-Private
-Code
-Issues
-Pull requests
-Actions
-Projects
-Wiki
-Security
-Insights
-gnt-yu-4/3.The-Mountain/03.Order-form/form-view.php /
-@basileLeroy
-basileLeroy Add the Order Form
-Latest commit b8c4adf 14 minutes ago
- History
- 1 contributor
-86 lines (79 sloc)  2.97 KB
 
 <?php // This file is mostly containing things for your view / html ?>
 
@@ -37,7 +10,7 @@ Latest commit b8c4adf 14 minutes ago
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" type="text/css"
           rel="stylesheet"/>
-    <title>Your fancy store</title>
+    <title>BlazeBass Audio Packs</title>
 </head>
 <body>
 <div class="container">
@@ -99,7 +72,7 @@ Latest commit b8c4adf 14 minutes ago
             <?php endforeach; ?>
         </fieldset>
 
-        <button type="submit" class="btn btn-primary">Order!</button>
+        <button type="submit" name="order" class="btn btn-primary">Order!</button>
     </form>
 
     <footer>You already ordered <strong>&euro; <?php echo $totalValue ?></strong> in food and drinks.</footer>
@@ -112,16 +85,3 @@ Latest commit b8c4adf 14 minutes ago
 </style>
 </body>
 </html>
-© 2022 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Docs
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About
-Loading complete

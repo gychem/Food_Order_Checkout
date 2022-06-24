@@ -32,7 +32,7 @@
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="email">E-mail:</label>
-                <input type="email" id="email" name="email" class="form-control"/>
+                <input type="email" id="email" name="email" class="form-control" value="<?= empty($_POST['email']) ? '' : $_POST['email'] ?>"/>
             </div>
             <div></div>
         </div>
@@ -43,21 +43,21 @@
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="street">Street:</label>
-                    <input type="text" name="street" id="street" class="form-control">
+                    <input type="text" name="street" id="street"  class="form-control" value="<?= empty($_POST['street']) ? '' : $_POST['street'] ?>">
                 </div>
                 <div class="form-group col-md-6">
                     <label for="streetnumber">Street number:</label>
-                    <input type="text" id="streetnumber" name="streetnumber" class="form-control">
+                    <input type="number" id="streetnumber" name="streetnumber" class="form-control" value="<?= empty($_POST['streetnumber']) ? '' : $_POST['streetnumber'] ?>">
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="city">City:</label>
-                    <input type="text" id="city" name="city" class="form-control">
+                    <input type="text" id="city" name="city" class="form-control" value="<?= empty($_POST['city']) ? '' : $_POST['city'] ?>">
                 </div>
                 <div class="form-group col-md-6">
                     <label for="zipcode">Zipcode</label>
-                    <input type="text" id="zipcode" name="zipcode" class="form-control">
+                    <input type="text" id="zipcode" name="zipcode" class="form-control" value="<?= empty($_POST['zipcode']) ? '' : $_POST['zipcode'] ?>">
                 </div>
             </div>
         </fieldset>
@@ -67,7 +67,7 @@
             <?php foreach ($products as $i => $product): ?>
                 <label>
 					<?php // <?= is equal to <?php echo ?>
-                    <input type="checkbox" value="1" name="products[<?php echo $i ?>]"/> <?php echo $product['name'] ?> -
+                    <input type="checkbox" value="1" <?= empty($_POST['products'][$i]) ? '' : 'checked' ?> name="products[<?php echo $i ?>]"/> <?php echo $product['name'] ?> -
                     &euro; <?= number_format($product['price'], 2) ?></label><br />
             <?php endforeach; ?>
         </fieldset>

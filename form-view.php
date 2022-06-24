@@ -10,7 +10,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" type="text/css"
           rel="stylesheet"/>
-    <title>BlazeBass Audio Packs</title>
+    <title>Ticket Sales</title>
 </head>
 <body>
 <div class="container">
@@ -19,10 +19,10 @@
     <nav>
         <ul class="nav">
             <li class="nav-item">
-                <a class="nav-link active" href="?food=1">Order food</a>
+                <a class="nav-link active" href="?daytickets=1">Order Daytickets</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="?food=0">Order drinks</a>
+                <a class="nav-link" href="?optionaltickets=1">Order Optional Tickets</a>
             </li>
         </ul>
     </nav>
@@ -64,15 +64,21 @@
         <fieldset>
             <legend>Products</legend>
             <?php foreach ($products as $i => $product): ?>
-                <label class="d-flex">
-					<?php // <?= is equal to <?php echo ?>
-                    <input type="checkbox" value="1" <?= empty($_POST['products'][$i]) ? '' : 'checked' ?> name="products[<?php echo $i ?>]"/> <?php echo $product['name'] ?> -
-                    &euro; <?= number_format($product['price'], 2) ?>
-                    <input type="number" id="quantity" name="quantity[<?php echo $i ?>]" class="form-control w-25"  value="5">
-                </label>
-                   
-                    <br />
-            <?php endforeach; ?>
+                <?php if($product['type'] == 'cat1' && $activeProductList == 'cat1') { ?>
+                    <label class="d-flex">
+                        <input type="checkbox" value="<?php echo $i ?>" <?= empty($_SESSION['productscat1'][$i]) ? '' : 'checked' ?> name="products[<?php echo $i ?>]"/> <?php echo $product['name'] ?> -
+                        &euro; <?= number_format($product['price'], 2) ?>
+                        <input type="number" id="quantity" name="quantity[<?php echo $i ?>]" class="form-control w-25"  value="1">
+                    </label><br />    
+                <?php }
+                else if($product['type'] == 'cat2' && $activeProductList == 'cat2') { ?>
+                    <label class="d-flex">
+                        <input type="checkbox" value="<?php echo $i ?>" <?= empty($_SESSION['productscat2'][$i]) ? '' : 'checked' ?> name="products[<?php echo $i ?>]"/> <?php echo $product['name'] ?> -
+                        &euro; <?= number_format($product['price'], 2) ?>
+                        <input type="number" id="quantity" name="quantity[<?php echo $i ?>]" class="form-control w-25"  value="1">
+                    </label><br />    
+                <?php }
+            endforeach; ?>
         </fieldset>
 
         <button type="submit" name="order" class="btn btn-primary">Order!</button>

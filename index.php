@@ -12,6 +12,7 @@ function whatIsHappening() { // Use this function when you need to need an overv
     echo '<h2>$_SESSION</h2>';
     var_dump($_SESSION);
 }
+//whatIsHappening();
 
 $products = [
     ['name' => 'Pizza Hawai', 'price' => 12.99, 'type' => 'cat1 or cat2'], // Example -> Don't update this field
@@ -21,6 +22,30 @@ $products = [
     ['name' => 'Coca Cola', 'price' => 1.50, 'type' => 'cat2'],
     ['name' => 'Ice-Tea', 'price' => 1.50, 'type' => 'cat2'],
 ];
+$activeProductList = 'cat1';
+
+if(isset($_GET['daytickets'])) {
+    $activeProductList = 'cat1';
+} elseif(isset($_GET['optionaltickets'])) {
+    $activeProductList = 'cat2';
+}
+
+
+if (empty($_SESSION['email'])) {
+    $_SESSION["email"] = '';
+} 
+if (empty($_SESSION['street'])) {
+    $_SESSION["street"] = '';
+} 
+if (empty($_SESSION['streetnumber'])) {
+    $_SESSION["streetnumber"] = '';
+} 
+if (empty($_SESSION['city'])) {
+    $_SESSION["city"] = '';
+} 
+if (empty($_SESSION['zipcode'])) {
+    $_SESSION["zipcode"] = '';
+} 
 
 $activeProductList = 'cat1';
 
@@ -55,7 +80,7 @@ if (empty($_SESSION['zipcode'])) {
 
 $totalValue = 0;
 
-function validate()
+function formError() 
 {
     global $formError;
     global $products;
@@ -184,7 +209,7 @@ function loadOrder($products) {
 
     $_SESSION['totalPrice'] = $totalPrice;
     $_SESSION['orderDetails'] = $orderDetails;
-}
+git }
 
 $formSubmitted = false;
 if (isset($_POST["order"])) {

@@ -13,9 +13,13 @@
 <div class="container">
 
 <?php 
-        global $orderContent; 
-        print_r($orderContent); 
-    ?>
+        global $orderMessage; print_r($orderMessage); 
+        global $orderDetails; print_r($orderDetails); 
+        global $orderProducts; print_r($orderProducts);
+        global $orderDelivery; print_r($orderDelivery);  
+        global $orderTotalPrice; print_r($orderTotalPrice);  
+        global $orderPay; print_r($orderPay);  
+?>
 
 <div class="card mt-4">
   <div class="card-body">

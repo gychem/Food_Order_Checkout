@@ -80,9 +80,9 @@ if (empty($_SESSION['zipcode'])) {
 
 $totalValue = 0;
 
-function formError() 
+
+function validate()
 {
-    global $formError;
     global $products;
     $validateArray = [];
 
@@ -135,13 +135,14 @@ function showError($message, $fieldError, $fieldName) {
     global $errorMessage; $errorMessage = '<div class="alert alert-danger" role="alert">' . $message . '</div>';  
     global ${$errorActive . $fieldName}; ${$errorActive . $fieldName} = true;
     global ${$errorAlert . $fieldName}; ${$errorAlert . $fieldName} = $fieldError;
+    global $formError; $formError = true;
 }
 
 function handleForm()
 {
     $invalidFields = validate(); 
     global $formError;
-    
+
     if (!empty($invalidFields)) // TODO: handle errors
     {
         $emptyFields = '';
@@ -209,7 +210,7 @@ function loadOrder($products) {
 
     $_SESSION['totalPrice'] = $totalPrice;
     $_SESSION['orderDetails'] = $orderDetails;
-git }
+}
 
 $formSubmitted = false;
 if (isset($_POST["order"])) {

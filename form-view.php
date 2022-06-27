@@ -44,7 +44,8 @@
                     <input type="text" placeholder="Street" aria-label="Street" name="street" id="street"  class="form-control" value="<?= empty($_POST['street']) ? $_SESSION['street'] : $_POST['street'] ?>">
                 </div>
                 <div class="form-group col-md-6">
-                    <input type="number" placeholder="Street number" aria-label="Street number" id="streetnumber" name="streetnumber" class="form-control" value="<?= empty($_POST['streetnumber']) ? $_SESSION['streetnumber']  : $_POST['streetnumber'] ?>">
+                    <input type="number" placeholder="Street number" aria-label="Street number" id="streetnumber" name="streetnumber" class="form-control <?= $errorActiveStreetnumber == true ? 'is-invalid' : '' ?>" value="<?= empty($_POST['streetnumber']) ? $_SESSION['streetnumber']  : $_POST['streetnumber'] ?>">
+                    <div class="invalid-feedback"> <?php global $errorAlertStreetnumber; print_r($errorAlertStreetnumber); ?></div>
                 </div>
             </div>
             <div class="form-row">
@@ -52,7 +53,8 @@
                     <input type="text" id="city" placeholder="City" aria-label="City" name="city" class="form-control" value="<?= empty($_POST['city']) ? $_SESSION['city']  : $_POST['city'] ?>">
                 </div>
                 <div class="form-group col-md-6">
-                    <input type="number" id="zipcode" placeholder="Zipcode" aria-label="Zipcode" name="zipcode" class="form-control" value="<?= empty($_POST['zipcode']) ? $_SESSION['zipcode']  : $_POST['zipcode'] ?>">
+                    <input type="number" id="zipcode" placeholder="Zipcode" aria-label="Zipcode" name="zipcode" class="form-control <?= $errorActiveZipcode == true ? 'is-invalid' : '' ?>" value="<?= empty($_POST['zipcode']) ? $_SESSION['zipcode']  : $_POST['zipcode'] ?>">
+                    <div class="invalid-feedback"> <?php global $errorAlertZipcode; print_r($errorAlertZipcode); ?></div>
                 </div>
             </div>
         </fieldset>

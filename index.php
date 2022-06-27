@@ -105,7 +105,7 @@ function validate()
 
 function showError($message, $fieldError, $fieldName) {
     $formError = true; $errorActive = 'errorActive'; $errorAlert = 'errorAlert';
-    global $errorMessage; $errorMessage = '<div class="alert alert-danger" role="alert">' . $message . '</div>';  
+    global $errorMessage; $errorMessage = '<div class="alert alert-danger mx-4" role="alert">' . $message . '</div>';  
     global ${$errorActive . $fieldName}; ${$errorActive . $fieldName} = true;
     global ${$errorAlert . $fieldName}; ${$errorAlert . $fieldName} = $fieldError;
     global $formError; $formError = true;
@@ -184,10 +184,10 @@ function loadOrder($products) {
     $_SESSION['productsList'] = $productsList;
 
     global $orderMessage; $orderMessage = '<div class="alert alert-warning" role="alert">Order In Progress</div>';
-    $deliveryMethod = '<b>Delivery Time</b> 30 Minutes - Express Delivery €5,00';
+    $deliveryMethod = '30 Minutes - Express Delivery €5,00';
     $deliveryButton = '<form method="post"><button type="submit" name="expressdelivery" class="btn btn-success mt-1">Add express delivery in 30 min for €5,00</button></form>';
     global $orderDelivery; $orderDelivery = '<div class="card mt-2"><div class="card-body d-flex justify-content-between align-items-center">
-                    <div>'.$deliveryMethod.'</div>'.$deliveryButton.'</div></div>';
+                    <div><b>Delivery</b> '.$deliveryMethod.'</div>'.$deliveryButton.'</div></div>';
                     
     updateOrder($orderMessage, $orderDelivery, $totalPrice, false);
 }
@@ -203,10 +203,10 @@ if (isset($_POST["expressdelivery"])) {
     $totalPrice = number_format($totalPrice, 2);
 
     $orderMessage = '<div class="alert alert-warning" role="alert">Order In Progress</div>';
-    $deliveryMethod = '<b>Delivery Time</b> 30 Minutes - Express Delivery €5,00';
+    $deliveryMethod = '<b>Delivery</b> 30 Minutes - Express Delivery €5,00';
     $deliveryButton = '<form method="post"><button type="submit" name="freedelivery" class="btn btn-warning">Remove Express Delivery</button></form>';
     $orderDelivery = '<div class="card mt-2"><div class="card-body d-flex justify-content-between align-items-center">
-                    <div>'.$deliveryMethod.'</div>'.$deliveryButton.'</div></div>';
+                      <div>'.$deliveryMethod.'</div>'.$deliveryButton.'</div></div>';
 
     updateOrder($orderMessage, $orderDelivery, $totalPrice, false);
 }
@@ -217,7 +217,7 @@ if (isset($_POST["freedelivery"])) {
     $totalPrice = number_format($totalPrice, 2);
     
     $orderMessage = '<div class="alert alert-warning" role="alert">Order In Progress</div>';
-    $deliveryMethod = '<b>Delivery Time</b> 1 Hour - Regular Delivery FREE';
+    $deliveryMethod = '<b>Delivery</b> 1 Hour - Regular Delivery FREE';
     $deliveryButton = '<form method="post"><button type="submit" name="expressdelivery" class="btn btn-success mt-1">Add express delivery in 30 min for €5,00</button></form>';
     $orderDelivery = '<div class="card mt-2"><div class="card-body d-flex justify-content-between align-items-center">
                     <div>'.$deliveryMethod.'</div>'.$deliveryButton.'</div></div>';
@@ -228,7 +228,7 @@ if (isset($_POST["freedelivery"])) {
 if (isset($_POST["payorder"])) {
     $totalPrice = number_format((float)$_SESSION['totalPrice'], 2);
     $orderMessage = '<div class="alert alert-success" role="alert">Order Has Been Placed</div>';
-    $deliveryMethod = '<b>Delivery Time</b> 1 Hour - Regular Delivery FREE';
+    $deliveryMethod = '<b>Delivery</b> 1 Hour - Regular Delivery FREE';
     $deliveryButton = '';
     $orderDelivery = '<div class="card mt-2"><div class="card-body d-flex justify-content-between align-items-center">
                       <div>'.$deliveryMethod.'</div>'.$deliveryButton.'</div></div>';

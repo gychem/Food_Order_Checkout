@@ -13,8 +13,9 @@ function whatIsHappening() { // Use this function when you need to need an overv
     var_dump($_SESSION);
 }
 
+
 $products = [
-    ['name' => 'Pizza Hawai', 'price' => 12.99, 'type' => 'cat1 or cat2'], // Example -> Don't update this field
+    ['name' => 'Name', 'price' => 0.00, 'type' => 'cat1 or cat2'], // Example -> Don't update this field
     ['name' => 'Pizza Pepperoni', 'price' => 12.99, 'type' => 'cat1'],
     ['name' => 'Pizza Parma', 'price' => 12.99, 'type' => 'cat1'],
     ['name' => 'Pizza BBQ Chicken', 'price' => 12.99, 'type' => 'cat1'],
@@ -50,6 +51,12 @@ if (empty($_SESSION['city'])) {
 if (empty($_SESSION['zipcode'])) {
     $_SESSION["zipcode"] = '';
 } 
+if (empty($_SESSION['shoppingcartindex'])) {
+    $_SESSION["shoppingcartindex"] = [];
+} 
+if (empty($_SESSION['shoppingcart'])) {
+    $_SESSION["shoppingcart"] = [];
+} 
 
 $totalValue = 0;
 
@@ -60,7 +67,22 @@ function validate()
     $validateArray = [];
 
     $fields = ['name', 'email', 'street', 'streetnumber', 'city', 'zipcode', 'products'];
-    
+
+    ///////////////////////////////////////////////////////////////////////////////: BASILE
+    // foreach($_POST as $key => $inputValue) {
+    //     if($key === "email" && !filter_var($inputValue, FILTER_VALIDATE_EMAIL)) {
+    //         $result[] = ["name" => $key, "error" => "E-mail address is invalid !"];
+    //     } else if($key === "zipcode" && !is_numeric($inputValue)) {
+    //         $result[] = ["name" => $key, "error" => "Zipcode can only be numbers"];
+    //     } else if($inputValue === "") {
+    //         $result[] = ["name" => $key, "error" => "Empty field spotted"];
+    //     }
+    // }
+    ////////////////////////////////////////////////////////////////////////
+
+
+
+
     foreach ($fields as $i => $field) {
         if (empty($_POST[$field])) { // Check if field is empty
             array_push($validateArray, $field);
@@ -105,7 +127,7 @@ function validate()
 
 function showError($message, $fieldError, $fieldName) {
     $formError = true; $errorActive = 'errorActive'; $errorAlert = 'errorAlert';
-    global $errorMessage; $errorMessage = '<div class="alert alert-danger mx-4" role="alert">' . $message . '</div>';  
+    global $errorMessage; $errorMessage = '<div class="alert alert-danger mt-2" role="alert">' . $message . '</div>';  
     global ${$errorActive . $fieldName}; ${$errorActive . $fieldName} = true;
     global ${$errorAlert . $fieldName}; ${$errorAlert . $fieldName} = $fieldError;
     global $formError; $formError = true;
@@ -234,6 +256,39 @@ if (isset($_POST["payorder"])) {
                       <div>'.$deliveryMethod.'</div>'.$deliveryButton.'</div></div>';
 
     updateOrder($orderMessage, $orderDelivery, $totalPrice, true);
+}
+
+if (isset($_POST["addToCart"])) {
+    $index = $_POST['addToCart'];
+    addToCart($index);  
+}
+
+function addToCart($index) {
+
+    global $products; global $cartIndexesArray; 
+
+    $cartIndexesArray = $_SESSION['shoppingcartindex']; // Add product number to session array shoppingcartindex
+    array_push($cartIndexesArray, $index);
+    $_SESSION['shoppingcartindex'] = $cartIndexesArray;
+
+    $products[$index]['quantity'] = 1;
+    $productToCart = ' <li class="list-group-item d-flex justify-content-between align-items-center">
+                     ' . $products[$index]['quantity'] .' x 
+                     ' . $products[$index]['name'] . ' 
+                     <span class="badge rounded-pill mx-1 bg-success text-white">€ '.$products[$index]['price'].'</span>
+                     <button type="submit" name="deleteFromCart" value="' . $index . '" class="btn btn-danger">X</button>
+                     </li>';
+
+    $shoppingCartArray = $_SESSION['shoppingcart']; // Add product number to session array shoppingcartindex
+    array_push($shoppingCartArray, $productToCart);
+    $_SESSION['shoppingcart'] = $shoppingCartArray;
+}
+
+if (isset($_POST["deleteFromCart"])) {
+    $index = $_POST['deleteFromCart'];
+
+    var_dump($_SESSION['shoppingcart']);
+    print_r('Delete from cart:' . $index);  
 }
 
 require 'form-view.php';

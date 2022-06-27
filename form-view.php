@@ -23,24 +23,28 @@
         <div class="card mt-4">
             <div class="card-body">
 
-                <nav>
+                <nav class="d-flex align-items-center justify-content-between">
                     <div class="btn-group mt-1" role="group" aria-label="Basic example">
                         <a class="btn btn-secondary" onclick="document.getElementById('orderForm').submit();" href="?food">Food</a>
                         <a class="btn btn-secondary" type="submit" href="?drinks">Drinks</a>
                     </div>
+                    <div>
+                    Shopping Cart<br>              
+                </div>
                 </nav>
 
                 <form method="post" id="orderForm">
-                <fieldset>
+                <fieldset class="d-flex justify-content-between">
                     <ul class="list-group mt-2">
                             <?php foreach ($products as $i => $product): ?>
                             
                                 <?php if($product['type'] == 'cat1' && $activeProductList == 'cat1') { ?>
                                     <li class="list-group-item d-flex align-items-center">
-                                        <input type="checkbox" value="<?php echo $i ?>" <?= empty($_SESSION['productscat1'][$i]) ? '' : 'checked' ?> name="products[<?php echo $i ?>]"/> 
-                                        <div class="mx-2 align-self-center"><?php echo $product['name'] ?></div>
-                                        <div class="align-self-center">&euro;<?= number_format($product['price'], 2) ?></div>
-                                        <input type="number" id="quantity" name="quantity[<?php echo $i ?>]" class="form-control mx-2" style="width: 75px" value="1">
+                                            <input type="checkbox" value="<?php echo $i ?>" <?= empty($_SESSION['productscat1'][$i]) ? '' : 'checked' ?> name="products[<?php echo $i ?>]"/> 
+                                            <div class="mx-2 align-self-center"><?php echo $product['name'] ?></div>
+                                            <div class="align-self-center">&euro;<?= number_format($product['price'], 2) ?></div>
+                                            <input type="number" id="quantity" name="quantity[<?php echo $i ?>]" class="form-control mx-2" style="width: 75px" value="1">
+                                            <button type="submit" name="addToCart" value="<?php echo $i ?>" class="btn btn-success">+</button>
                                     </li>
                                 <?php }
                                 else if($product['type'] == 'cat2' && $activeProductList == 'cat2') { ?>
@@ -53,17 +57,23 @@
                                 <?php } ?>
                             </li>
                             <?php endforeach; ?>
-                        </div>
+                   
                     </ul>
+                    <div class="mx-2 mt-2">
+                        <?php 
+                            foreach ($_SESSION['shoppingcart'] as $i => $product) {
+                            print_r($product);
+                            }
+                        ?>
+                    </div>
                 </fieldset>
 
                 <?php 
                     global $errorMessage;
                     print_r($errorMessage); 
                 ?>
-
                 
-                    <fieldset class="mx-4">
+                    <fieldset class="mt-2">
                         <div class="form-row">
                             <div class="form-group  col-md-6">
                                 <input type="text" placeholder="Name" aria-label="Name" id="name" name="name" class="form-control" value="<?= empty($_POST['name']) ? $_SESSION['name'] : $_POST['name'] ?>"/>
@@ -93,9 +103,9 @@
                         </div>
                     </fieldset>
             </div>
-       
+            </div> 
         <button type="submit" name="order" class="btn btn-success w-100 mt-2 mb-4">Order</button></form>
-        </div> 
+        
     </div>
 </body>
 </html>

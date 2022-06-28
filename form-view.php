@@ -7,6 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" type="text/css"
           rel="stylesheet"/>
+
+    <link rel="stylesheet" href="style.css">
     <title>Ticket Sales</title>
 </head>
 <body class="bg-secondary bg-gradient pt-4">
@@ -24,46 +26,66 @@
             <div class="card-body">
 
                 <nav class="d-flex align-items-center justify-content-between">
-                    <div class="btn-group mt-1" role="group" aria-label="Basic example">
+                    <div class="btn-group mt-1 w-25" role="group" aria-label="Basic example">
                         <a class="btn btn-secondary" onclick="document.getElementById('orderForm').submit();" href="?food">Food</a>
                         <a class="btn btn-secondary" type="submit" href="?drinks">Drinks</a>
                     </div>
-                    <div>
-                    Shopping Cart<br>              
-                </div>
+                    <div class="w-75 d-flex justify-content-end">
+                        <div class="float-end text-end ms-auto" style="margin-right: 50px">Shopping Cart</div>             
+                    </div>
                 </nav>
 
                 <form method="post" id="orderForm">
-                <fieldset class="d-flex justify-content-between">
-                    <ul class="list-group mt-2">
+                <fieldset class="d-flex justify-content-between productsContainer">
+                    <ul class="list-group mt-2 w-75 products">
                             <?php foreach ($products as $i => $product): ?>
                             
                                 <?php if($product['type'] == 'cat1' && $activeProductList == 'cat1') { ?>
-                                    <li class="list-group-item d-flex align-items-center">
-                                            <input type="checkbox" value="<?php echo $i ?>" <?= empty($_SESSION['productscat1'][$i]) ? '' : 'checked' ?> name="products[<?php echo $i ?>]"/> 
-                                            <div class="mx-2 align-self-center"><?php echo $product['name'] ?></div>
-                                            <div class="align-self-center">&euro;<?= number_format($product['price'], 2) ?></div>
-                                            <input type="number" id="quantity" name="quantity[<?php echo $i ?>]" class="form-control mx-2" style="width: 75px" value="1">
-                                            <button type="submit" name="addToCart" value="<?php echo $i ?>" class="btn btn-success">+</button>
+                                    <li class="list-group-item d-flex align-items-center justify-content-between"> 
+                                        <img src="<?= $product['image'] ?>" width="25px"></img>
+                                            <div class="mx-2 align-self-center w-75"><?php echo $product['name'] ?></div>
+                                            <span class="badge rounded-pill mx-1 bg-success text-white">&euro;<?= number_format($product['price'], 2) ?></span>
+                                            <button type="submit" name="addToCart" value="<?php echo $i ?>" class="btn btn-success mx-2">+</button>
                                     </li>
                                 <?php }
                                 else if($product['type'] == 'cat2' && $activeProductList == 'cat2') { ?>
-                                    <li class="list-group-item d-flex align-items-center">
-                                        <input type="checkbox" value="<?php echo $i ?>" <?= empty($_SESSION['productscat2'][$i]) ? '' : 'checked' ?> name="products[<?php echo $i ?>]"/> 
-                                        <div class="mx-2 align-self-center"><?php echo $product['name'] ?></div>
-                                        <div class="align-self-center">&euro;<?= number_format($product['price'], 2) ?></div>
-                                        <div class=""><input type="number" id="quantity" name="quantity[<?php echo $i ?>]" class="form-control mx-2"  style="width: 75px" value="1"></div>
-                                    </li>
+                                    <li class="list-group-item d-flex align-items-center justify-content-between">
+                                        <img src="<?= $product['image'] ?>" width="25px"></img>
+                                        <div class="mx-2 align-self-center w-75"><?php echo $product['name'] ?></div>
+                                        <span class="badge rounded-pill mx-1 bg-success text-white">&euro;<?= number_format($product['price'], 2) ?></span>
+                                        <button type="submit" name="addToCart" value="<?php echo $i ?>" class="btn btn-success mx-2">+</button> </li>
                                 <?php } ?>
                             </li>
                             <?php endforeach; ?>
                    
                     </ul>
-                    <div class="mx-2 mt-2">
+                    <div class=" mt-2 w-50 orderCart">
                         <?php 
-                            foreach ($_SESSION['shoppingcart'] as $i => $product) {
-                            print_r($product);
+                            $cartTotalPrice = 0;
+
+                             foreach ($_SESSION['ordercart'] as $index => $product) {
+                                $productToCart = ' <li class="list-group-item text-light bg-secondary d-flex justify-content-between align-items-center cartItem"><div class="d-flex w-75">
+                                ' . $product['quantity'] .' x 
+                                ' . $product['name'] . ' 
+                                </div>
+                                <span class="badge rounded-pill bg-success text-white">€' . number_format($product['price'] * $product['quantity'], 2) . '</span>
+                                <button type="submit" name="quantityMinus" value="' . $index . '" class="btn btn-warning">-</button>
+                                <button type="submit" name="quantityPlus" value="' . $index . '" class="btn btn-success">+</button>
+                                <button type="submit" name="deleteFromCart" value="' . $index . '" class="btn btn-danger">X</button>
+                                </li>';
+
+                                $cartTotalPrice += number_format($product['price'] * $product['quantity'], 2);
+
+                                print_r($productToCart);
                             }
+
+                            
+                            $cartTotalPrice = '<li class="list-group-item text-light bg-dark d-flex justify-content-between align-items-center"><div class="d-flex w-75">  
+                                                € '. $cartTotalPrice .'
+                                                </li>';
+
+
+                            print_r($cartTotalPrice);
                         ?>
                     </div>
                 </fieldset>
@@ -104,7 +126,7 @@
                     </fieldset>
             </div>
             </div> 
-        <button type="submit" name="order" class="btn btn-success w-100 mt-2 mb-4">Order</button></form>
+        <button type="submit" name="order" class="btn btn-success w-100 mt-2">Order</button></form>
         
     </div>
 </body>

@@ -1,0 +1,45 @@
+
+
+
+@media only screen and (min-width: 768px) { // Small devices Phones
+
+}
+
+@media only screen and (max-width: 992px) { // Small devices Tablets
+
+
+}
+
+.cartItem {
+    gap: 5px;
+}
+
+img {
+    width: 50px;
+    height: 50px;
+    
+}
+
+
+@media screen and (max-width: 1200px) {
+    .productsContainer {
+        flex-wrap: wrap;  
+    }
+
+    .products {
+        margin: 0px;
+        min-width: 100%;
+    }
+
+    .orderCart {
+        min-width: 100%;
+
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .orderCart {
+        margin-left: 5px;
+    }
+    
+}

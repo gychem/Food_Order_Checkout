@@ -13,14 +13,13 @@ function whatIsHappening() { // Use this function when you need to need an overv
     var_dump($_SESSION);
 }
 
-
 $products = [
-    ['name' => 'Name', 'price' => 0.00, 'type' => 'cat1 or cat2'], // Example -> Don't update this field
-    ['name' => 'Pizza Pepperoni', 'price' => 12.99, 'type' => 'cat1'],
-    ['name' => 'Pizza Parma', 'price' => 12.99, 'type' => 'cat1'],
-    ['name' => 'Pizza BBQ Chicken', 'price' => 12.99, 'type' => 'cat1'],
-    ['name' => 'Coca Cola', 'price' => 1.50, 'type' => 'cat2'],
-    ['name' => 'Ice-Tea', 'price' => 1.50, 'type' => 'cat2'],
+    ['image' => './images/image.png', 'name' => 'Name', 'price' => 0.00, 'type' => 'cat1 or cat2'], // Example -> Don't update this field
+    ['image' => './images/pizza-pepperoni.png', 'name' => 'Pizza Pepperoni', 'price' => 12.99, 'type' => 'cat1'],
+    ['image' => './images/pizza-parma.png', 'name' => 'Pizza Parma', 'price' => 12.99, 'type' => 'cat1'],
+    ['image' => './images/pizza-bbq-chicken.png', 'name' => 'Pizza BBQ Chicken', 'price' => 12.99, 'type' => 'cat1'],
+    ['image' => './images/coca-cola.png', 'name' => 'Coca Cola', 'price' => 1.50, 'type' => 'cat2'],
+    ['image' => './images/ice-tea.png','name' => 'Ice-Tea', 'price' => 1.50, 'type' => 'cat2'],
 ];
 
 $activeProductList = 'cat1';
@@ -33,40 +32,19 @@ if(isset($_GET['food'])) {
     $activeProductList = 'cat2';
 }
 
-if (empty($_SESSION['email'])) {
-    $_SESSION["email"] = '';
-} 
-if (empty($_SESSION['name'])) {
-    $_SESSION["name"] = '';
-} 
-if (empty($_SESSION['street'])) {
-    $_SESSION["street"] = '';
-} 
-if (empty($_SESSION['streetnumber'])) {
-    $_SESSION["streetnumber"] = '';
-} 
-if (empty($_SESSION['city'])) {
-    $_SESSION["city"] = '';
-} 
-if (empty($_SESSION['zipcode'])) {
-    $_SESSION["zipcode"] = '';
-} 
-if (empty($_SESSION['shoppingcartindex'])) {
-    $_SESSION["shoppingcartindex"] = [];
-} 
-if (empty($_SESSION['shoppingcart'])) {
-    $_SESSION["shoppingcart"] = [];
-} 
-
-$totalValue = 0;
-
+if (empty($_SESSION['email'])) { $_SESSION["email"] = ''; } 
+if (empty($_SESSION['name'])) { $_SESSION["name"] = ''; } 
+if (empty($_SESSION['street'])) { $_SESSION["street"] = ''; } 
+if (empty($_SESSION['streetnumber'])) {$_SESSION["streetnumber"] = ''; } 
+if (empty($_SESSION['city'])) { $_SESSION["city"] = ''; } 
+if (empty($_SESSION['zipcode'])) { $_SESSION["zipcode"] = ''; } 
+if (empty($_SESSION['ordercart'])) { $_SESSION["ordercart"] = []; } 
 
 function validate()
 {
     global $products;
     $validateArray = [];
-
-    $fields = ['name', 'email', 'street', 'streetnumber', 'city', 'zipcode', 'products'];
+    $fields = ['name', 'email', 'street', 'streetnumber', 'city', 'zipcode'];
 
     ///////////////////////////////////////////////////////////////////////////////: BASILE
     // foreach($_POST as $key => $inputValue) {
@@ -79,9 +57,6 @@ function validate()
     //     }
     // }
     ////////////////////////////////////////////////////////////////////////
-
-
-
 
     foreach ($fields as $i => $field) {
         if (empty($_POST[$field])) { // Check if field is empty
@@ -111,18 +86,19 @@ function validate()
                     $fieldError = "Invalid Zipcode !";
                     showError($message,$fieldError,'Zipcode');
                 }
-            } else if($field == 'products') {
-                $firstIndex = reset($_POST['products']);
-                $cat =  $products[$firstIndex]['type'];
-                $sessionName = 'products'. $cat;
-                $_SESSION[$sessionName] = $_POST['products'];  
-            }
-            else {
+            } else {
                $_SESSION[$field] = $_POST[$field];
             }
         }
     }
-    if(!empty($validateArray) ) { return $validateArray; }
+
+    if(empty($_SESSION['ordercart'])) {
+        array_push($validateArray, 'products');
+    } 
+    
+    if(!empty($validateArray)) {
+        return $validateArray;
+    }
 }
 
 function showError($message, $fieldError, $fieldName) {
@@ -136,32 +112,30 @@ function showError($message, $fieldError, $fieldName) {
 function handleForm()
 {
     $invalidFields = validate(); 
-    global $formError;
+    global $formError; global $products; 
 
     if (!empty($invalidFields)) // TODO: handle errors
     {
         $emptyFields = '';
         $max = max(array_keys($invalidFields));
 
-        for ($i=0; $i <= $max ; $i++) { 
-            $emptyFields .= $invalidFields[$i] . ', ';
-        }
+        for ($i=0; $i <= $max ; $i++) { $emptyFields .= $invalidFields[$i] . ', '; }
+        
         $message = 'Form is incomplete! Missing Field(s): '. $emptyFields;  
         showError($message, 'none', 'none');
     } 
     else if($formError == false)
     {
-        global $products;  
         loadOrder($products);
     }
 }
 
 function updateOrder($orderMessage, $orderDelivery, $totalPrice, $orderPayed) 
 {
-    global $orderMessage; $orderMessage = $orderMessage;
+    $orderMessage = $orderMessage;
     global $orderDetails; $orderDetails = $_SESSION['orderDetails'];
     global $orderProducts; $orderProducts = '<ul class="list-group mt-1">' . $_SESSION['productsList'] . '</ul>';
-    global $orderDelivery; $orderDelivery = $orderDelivery;
+    $orderDelivery; $orderDelivery = $orderDelivery;
     global $orderTotalPrice;  $orderTotalPrice = '<ul class="list-group mt-1"><li class="list-group-item d-flex justify-content-between align-items-center list-group-item-secondary">
     Total Price <span class="badge rounded-pill bg-success text-white">€'. $totalPrice .'</span></li></ul>';
     
@@ -175,31 +149,28 @@ function updateOrder($orderMessage, $orderDelivery, $totalPrice, $orderPayed)
 }
 
 function loadOrder($products) {
-    // Order Details
     $detailsName = '<span class="lead">Name</span> ' . $_POST['name'];
     $detailsEmail = ' <span class="lead">Email</span> ' . $_POST['email'];
     $detailsAdres = '<br><span class="lead">Street</span> ' . $_POST['street'] . ' <span class="lead">Nr</span> ' . $_POST['streetnumber'] . '<br><span class="lead">Zipcode</span> ' . $_POST['zipcode'] . ' <span class="lead">City</span> ' . $_POST['city'];
     $orderDetails = '<div class="card mt-2"><div class="card-body">'. $detailsName .  $detailsEmail . $detailsAdres . '</div></div>';
 
-    // Order Price
     $totalPrice = 0;
-
-    // Products List
-    $orderedProducts = $_POST['products'];
     $productsList = '';
-    foreach ($orderedProducts as $i => $product) {
-        $productTotalPrice = $products[$i]['price'] * $_POST['quantity'][$i];
-        $productTotalPriceFormat = number_format($productTotalPrice, 2, ',', ' ');
+
+    foreach ($_SESSION['ordercart'] as $i => $product) {
+        $productTotalPrice = $product['price'] * $product['quantity'];
+        $productTotalPriceFormat = number_format($productTotalPrice, 2);
   
         $orderedProduct = '
         <li class="list-group-item d-flex justify-content-between align-items-center">'
-        . $_POST['quantity'][$i] . ' x '. $products[$i]['name'] . ' €' . $products[$i]['price'] . '<span class="badge rounded-pill bg-success text-white">€'. $productTotalPriceFormat .'</span>
+        . $product['quantity'] . ' x '. $product['name'] . ' €' . $product['price'] . '<span class="badge rounded-pill bg-success text-white">€'. $productTotalPriceFormat .'</span>
         </li>';
        
         $productsList .= $orderedProduct;
-        global $totalPrice; $totalPrice = (float)$totalPrice + (float)$productTotalPrice; 
+        $totalPrice; $totalPrice = (float)$totalPrice + (float)$productTotalPrice; 
         $totalPrice = number_format($totalPrice, 2);
     }
+
 
     $_SESSION['totalPrice'] = $totalPrice;
     $_SESSION['orderDetails'] = $orderDetails;
@@ -265,30 +236,41 @@ if (isset($_POST["addToCart"])) {
 
 function addToCart($index) {
 
-    global $products; global $cartIndexesArray; 
+    global $products; 
+    $duplicate = false;
 
-    $cartIndexesArray = $_SESSION['shoppingcartindex']; // Add product number to session array shoppingcartindex
-    array_push($cartIndexesArray, $index);
-    $_SESSION['shoppingcartindex'] = $cartIndexesArray;
+    foreach($_SESSION['ordercart'] as $i => $product) {
+        if($products[$index]['name'] == $product['name']) { 
+            $duplicate = true;
+            $_SESSION['ordercart'][$i]['quantity'] += 1;
+        } 
+    }
 
-    $products[$index]['quantity'] = 1;
-    $productToCart = ' <li class="list-group-item d-flex justify-content-between align-items-center">
-                     ' . $products[$index]['quantity'] .' x 
-                     ' . $products[$index]['name'] . ' 
-                     <span class="badge rounded-pill mx-1 bg-success text-white">€ '.$products[$index]['price'].'</span>
-                     <button type="submit" name="deleteFromCart" value="' . $index . '" class="btn btn-danger">X</button>
-                     </li>';
-
-    $shoppingCartArray = $_SESSION['shoppingcart']; // Add product number to session array shoppingcartindex
-    array_push($shoppingCartArray, $productToCart);
-    $_SESSION['shoppingcart'] = $shoppingCartArray;
+    if($duplicate == false) {
+        $products[$index]['quantity'] = 1;
+        $productAddCart = ['name' => $products[$index]['name'], 'price' => $products[$index]['price'], 'quantity' => $products[$index]['quantity']];
+        array_push($_SESSION['ordercart'], $productAddCart);
+    }
 }
+
 
 if (isset($_POST["deleteFromCart"])) {
     $index = $_POST['deleteFromCart'];
+    unset($_SESSION['ordercart'][$index]);  
+}
 
-    var_dump($_SESSION['shoppingcart']);
-    print_r('Delete from cart:' . $index);  
+if (isset($_POST["quantityMinus"])) {
+    $index = $_POST['quantityMinus'];
+
+    if(!$_SESSION['ordercart'][$index]['quantity'] <= 0) {
+        $_SESSION['ordercart'][$index]['quantity'] -= 1;
+    }
+}
+
+if (isset($_POST["quantityPlus"])) {
+    $index = $_POST['quantityPlus'];
+
+    $_SESSION['ordercart'][$index]['quantity'] += 1;
 }
 
 require 'form-view.php';
